@@ -1,0 +1,27 @@
+<?php
+// Sambungkan ke database
+include 'koneksi.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Ambil data dari formulir
+    $namalengkap = mysqli_real_escape_string($koneksi, $_POST['namalengkap']);
+    $jeniskelamin = mysqli_real_escape_string($koneksi, $_POST['jeniskelamin']);
+    $tanggallahir = mysqli_real_escape_string($koneksi, $_POST['tanggallahir']);
+    $alamat = mysqli_real_escape_string($koneksi, $_POST['alamat']);
+    $email = mysqli_real_escape_string($koneksi, $_POST['email']);
+    $notelp = mysqli_real_escape_string($koneksi, $_POST['notelp']);
+    $status = mysqli_real_escape_string($koneksi, $_POST['status']);
+
+    // Simpan ke database dengan password kosong
+    $query = "INSERT INTO penghuni (namalengkap, jeniskelamin, tanggallahir, alamat, email, notelp, status, password) 
+              VALUES ('$namalengkap', '$jeniskelamin', '$tanggallahir', '$alamat', '$email', '$notelp', '$status', '')";
+
+    if (mysqli_query($koneksi, $query)) {
+        echo "Registration successful! <a href='login.php'>Login Here</a>";
+    } else {
+        echo "Error: " . $query . "<br>" . mysqli_error($koneksi);
+    }
+
+    mysqli_close($koneksi);
+}
+?>

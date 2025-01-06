@@ -1,0 +1,90 @@
+<?php
+include 'koneksi.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $full_name = mysqli_real_escape_string($koneksi, $_POST['full_name']);
+    $birth_date = mysqli_real_escape_string($koneksi, $_POST['birth_date']);
+    $address = mysqli_real_escape_string($koneksi, $_POST['address']);
+    $email = mysqli_real_escape_string($koneksi, $_POST['email']);
+    $phone_number = mysqli_real_escape_string($koneksi, $_POST['phone_number']);
+    $password = mysqli_real_escape_string($koneksi, $_POST['password']);
+    $confirm_password = mysqli_real_escape_string($koneksi, $_POST['confirm_password']);
+
+    // Validasi Password
+    if ($password !== $confirm_password) {
+        echo "<script>alert('Password dan Confirm Password tidak sama');</script>";
+    } else {
+        // Enkripsi Password
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+        // Simpan Data
+        $sql = "INSERT INTO users (full_name, birth_date, address, email, phone_number, password) 
+                VALUES ('$full_name', '$birth_date', '$address', '$email', '$phone_number', '$hashed_password')";
+
+        if (mysqli_query($koneksi, $sql)) {
+            echo "<script>alert('Registrasi berhasil!');</script>";
+            echo "<script>window.location.href='login.php';</script>";
+        } else {
+            echo "Error: " . $sql . "<br>" . mysqli_error($koneksi);
+        }
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles_register.css" />
+    <title>Web Design Mastery | Welcome Back</title>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1>Welcome Back</h1>
+            <p>Please enter your details.</p>
+            <form action="register.php" method="POST" class="form">
+    <div class="form-row">
+        <div class="input__group">
+            <label for="full_name">Full Name</label>
+            <input type="text" id="full_name" name="full_name" placeholder="Enter your Full Name" required />
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="input__group">
+            <label for="birth_date">Date of Birth</label>
+            <input type="date" id="birth_date" name="birth_date" placeholder="Enter your Date of Birth" required />
+        </div>
+        <div class="input__group">
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address" placeholder="Enter your Address" required />
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="input__group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" placeholder="Enter your e-mail" required />
+        </div>
+        <div class="input__group">
+            <label for="phone_number">Phone Number</label>
+            <input type="tel" id="phone_number" name="phone_number" placeholder="Enter your Phone Number" required />
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="input__group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Password" required />
+        </div>
+        <div class="input__group">
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm your Password" required />
+        </div>
+    </div>
+    <button type="submit">Register</button>
+</form>
+
+        </div>
+    </div>
+</body>
+</html>
